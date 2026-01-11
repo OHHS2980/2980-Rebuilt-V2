@@ -4,11 +4,26 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIOSim;
+import frc.robot.subsystems.drive.module.ModuleIOSim;
+
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Pounds;
+
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -19,17 +34,55 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  XboxController controller;
 
+  Drive drive;
+
+  SwerveDriveSimulation driveSim;
+  final DriveTrainSimulationConfig driveSimConfig = DriveTrainSimulationConfig.Default()
+        // Specify gyro type (for realistic gyro drifting and error simulation)
+        .withGyro(COTS.ofNav2X())
+        // Specify swerve module (for realistic swerve dynamics)
+        .withSwerveModule(COTS.ofMark4(
+                DCMotor.getKrakenX60(1), // Drive motor is a Kraken X60
+                DCMotor.getKrakenX60(1), // Steer motor is a Falcon 500
+                COTS.WHEELS.BLUE_NITRILE_TREAD.cof, // wheel cof
+                3)) // L3 Gear ratio
+        // Configures the track length and track width (spacing between swerve modules)
+        .withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
+        // Configures the bumper size (dimensions of the robot bumper)
+        .withBumperSize(Inches.of(30), Inches.of(30))
+        .withRobotMass(Pounds.of(100));
+        
+
+  public void mapleSimSetup()
+  {
+    SimulatedArena.getInstance().addDriveTrainSimulation(driveSim);
+  }
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+
+    controller = new XboxController(0);
+
+    this.driveSim = new SwerveDriveSimulation(
+      driveSimConfig,
+      RobotState.getInstance().getPose()
+    );
+
+    this.drive = new Drive(
+      new ModuleIOSim(driveSim.getModules()[0],0),
+      new ModuleIOSim(driveSim.getModules()[1],1),
+      new ModuleIOSim(driveSim.getModules()[2],2),
+      new ModuleIOSim(driveSim.getModules()[3],3),
+      new GyroIOSim(driveSim.getGyroSimulation()),
+      Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
+      Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
+    );
+
     configureBindings();
+    mapleSimSetup();
   }
 
   /**
@@ -42,13 +95,16 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    drive.setDefaultCommand(
+      Drive.driveRobotCentric
+      (
+        drive, 
+        () -> controller.getLeftX(),
+        () -> controller.getLeftY(),
+        () -> controller.getRightX()
+      )
+    );
   }
 
   /**
@@ -56,8 +112,4 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
 }

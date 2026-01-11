@@ -4,7 +4,25 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+
+import java.util.concurrent.Flow.Publisher;
+
+import org.ironmaple.simulation.SimulatedArena;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOption;
+import edu.wpi.first.networktables.PubSubOptions;
+import edu.wpi.first.networktables.StructArrayEntry;
+import edu.wpi.first.networktables.StructEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -13,20 +31,63 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * the TimedRobot documentation. If you change the name of this class or the package after creating
  * this project, you must also update the Main.java file in the project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+  public RobotContainer robotContainer;
+
+  RobotState robotState;
+
+  final NetworkTable table;
+
+  final StructEntry<Pose2d> poseEntry;
+
+  final StructEntry<ChassisSpeeds> chassisEntry;
+
+  final StructArrayEntry<SwerveModuleState> states;
+
+  final StructArrayEntry<SwerveModuleState> real;
 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+
+    robotContainer = new RobotContainer();
+
+    Logger.start();
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+
+    table = inst.getTable("blud");
+
+    poseEntry = inst.getStructTopic("/blud/estimatedPose", Pose2d.struct).getEntry(
+      RobotState.getInstance().getPose(), 
+      PubSubOption.keepDuplicates(true)
+    );
+
+    chassisEntry = inst.getStructTopic("/blud/chassisSpeeds", ChassisSpeeds.struct).getEntry(
+      robotContainer.drive.chassisSpeeds,
+      PubSubOption.keepDuplicates(true)
+    );
+
+    real = inst.getStructArrayTopic("/blud/real", SwerveModuleState.struct).getEntry(
+      robotContainer.drive.getModuleStates(),
+      PubSubOption.keepDuplicates(true)
+    );
+
+    states = inst.getStructArrayTopic("/blud/states", SwerveModuleState.struct).getEntry(
+      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds),
+      PubSubOption.keepDuplicates(true)
+    );
+
+    robotState = RobotState.getInstance();
+
   }
+
+
+
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -42,6 +103,22 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    poseEntry.set(
+      RobotState.getInstance().getPose()
+    );
+
+    states.set(
+      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds)
+    );
+
+    real.set(
+      robotContainer.drive.getModuleStates()
+    );
+
+    chassisEntry.set(
+      robotContainer.drive.chassisSpeeds
+    );
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -54,11 +131,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      m_autonomousCommand.schedule();
     }
   }
 
@@ -93,9 +169,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+
+    SimulatedArena.getInstance();
+    
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+
+    
+    SimulatedArena.getInstance().simulationPeriodic();
+  }
 }

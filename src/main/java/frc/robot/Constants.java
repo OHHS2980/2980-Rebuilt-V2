@@ -4,6 +4,13 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
+import edu.wpi.first.math.geometry.Translation2d;
+//import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Mass;
+import frc.robot.util.LoggedTunableNumber;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -13,7 +20,55 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class SimConstants {
+
+    public static LoggedNetworkNumber turnP = new LoggedNetworkNumber("/Tuning/turnP", 0.1);
+
+    public static LoggedNetworkNumber turnI = new LoggedNetworkNumber("/Tuning/turnI", 0);
+  
+    public static LoggedNetworkNumber  turnD = new LoggedNetworkNumber ("/Tuning/turnD", 0.01);
+  
+    public static LoggedNetworkNumber  driveP = new LoggedNetworkNumber("/Tuning/driveP", 0.1);
+  
+    public static LoggedNetworkNumber  driveD = new LoggedNetworkNumber("/Tuning/driveD", 0.1);
+    
+  }
+
+
+  
+  public static final double MAX_SPEED = 0;
+
+  public static Translation2d flLocation = new Translation2d(-5,5);
+  public static Translation2d frLocation = new Translation2d(5,5);
+  public static Translation2d blLocation = new Translation2d(-5,-5);
+  public static Translation2d brLocation = new Translation2d(5,-5);
+
+  //CAN IDs
+
+  public static final int armEncoderID = 0;
+
+  public static final Mass robotmass = null;
+  public static int armCanID;
+
+  public static double trackY;
+
+  public static double trackX;
+
+  public static double bumperY;
+
+  public static double bumperX;
+
+  public static double robotMass;
+
+  public static double swerveWheelRadius = 0.1;
+
+  public static double driveGearRatio = 6;
+
+  public static double turnGearRatio = 6;
+
 }
