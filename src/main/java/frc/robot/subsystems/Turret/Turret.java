@@ -68,8 +68,8 @@ public class Turret extends SubsystemBase {
         turretPID.setPID
         (
             Constants.SimConstants.turretP.get(), 
-            Constants.SimConstants.turretP.get(), 
-            Constants.SimConstants.turretP.get()
+            Constants.SimConstants.turretI.get(), 
+            Constants.SimConstants.turretD.get()
         );
     }
 

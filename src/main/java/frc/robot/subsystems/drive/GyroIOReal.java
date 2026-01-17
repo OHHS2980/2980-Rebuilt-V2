@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import org.ironmaple.simulation.drivesims.GyroSimulation;
+
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
