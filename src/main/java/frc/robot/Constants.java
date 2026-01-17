@@ -6,6 +6,7 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
@@ -31,11 +32,36 @@ public final class Constants {
 
     public static LoggedNetworkNumber turnI = new LoggedNetworkNumber("/Tuning/turnI", 0);
   
-    public static LoggedNetworkNumber  turnD = new LoggedNetworkNumber ("/Tuning/turnD", 0.01);
+    public static LoggedNetworkNumber  turnD = new LoggedNetworkNumber ("/Tuning/turnD", 0);
   
-    public static LoggedNetworkNumber  driveP = new LoggedNetworkNumber("/Tuning/driveP", 0.1);
+    public static LoggedNetworkNumber  driveP = new LoggedNetworkNumber("/Tuning/driveP", 2);
   
-    public static LoggedNetworkNumber  driveD = new LoggedNetworkNumber("/Tuning/driveD", 0.1);
+    public static LoggedNetworkNumber  driveD = new LoggedNetworkNumber("/Tuning/driveD", 0);
+
+
+
+    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.5);
+
+    public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
+  
+    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 0);
+    
+  }
+
+  public static class FieldConstants {
+
+    public static Pose3d getHub()
+    {
+      return new Pose3d(0,0,10, null);
+    }
+
+
+
+    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.5);
+
+    public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
+  
+    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 0);
     
   }
 
@@ -43,16 +69,15 @@ public final class Constants {
   
   public static final double MAX_SPEED = 0;
 
-  public static Translation2d flLocation = new Translation2d(-5,5);
-  public static Translation2d frLocation = new Translation2d(5,5);
-  public static Translation2d blLocation = new Translation2d(-5,-5);
-  public static Translation2d brLocation = new Translation2d(5,-5);
+  public static Translation2d flLocation = new Translation2d(1.1,1.1);
+  public static Translation2d frLocation = new Translation2d(1.1,-1.1);
+  public static Translation2d blLocation = new Translation2d(-1.1,-1.1);
+  public static Translation2d brLocation = new Translation2d(-1.1,1.1);
 
   //CAN IDs
 
   public static final int armEncoderID = 0;
 
-  public static final Mass robotmass = null;
   public static int armCanID;
 
   public static double trackY;
@@ -70,5 +95,7 @@ public final class Constants {
   public static double driveGearRatio = 6;
 
   public static double turnGearRatio = 6;
+
+  public static double turretLimit;
 
 }

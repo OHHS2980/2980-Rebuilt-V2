@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.Turret.TurretIO;
+import frc.robot.subsystems.Turret.TurretIOSim;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOSim;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
@@ -39,6 +42,8 @@ public class RobotContainer {
 
   Drive drive;
 
+  Turret turret;
+
   SwerveDriveSimulation driveSim;
   final DriveTrainSimulationConfig driveSimConfig = DriveTrainSimulationConfig.Default()
         // Specify gyro type (for realistic gyro drifting and error simulation)
@@ -50,7 +55,7 @@ public class RobotContainer {
                 COTS.WHEELS.BLUE_NITRILE_TREAD.cof, // wheel cof
                 3)) // L3 Gear ratio
         // Configures the track length and track width (spacing between swerve modules)
-        .withTrackLengthTrackWidth(Inches.of(24), Inches.of(24))
+        .withTrackLengthTrackWidth(Inches.of(26), Inches.of(28))
         // Configures the bumper size (dimensions of the robot bumper)
         .withBumperSize(Inches.of(30), Inches.of(30))
         .withRobotMass(Pounds.of(100));
@@ -79,6 +84,13 @@ public class RobotContainer {
       new GyroIOSim(driveSim.getGyroSimulation()),
       Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
       Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
+    );
+
+    this.turret = new Turret(
+      new TurretIOSim(),
+      Constants.SimConstants.turretP.get(), 
+      Constants.SimConstants.turretI.get(),
+      Constants.SimConstants.turretD.get()
     );
 
     configureBindings();

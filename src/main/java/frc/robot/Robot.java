@@ -14,6 +14,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.DoubleEntry;
 import edu.wpi.first.networktables.DoubleTopic;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -25,6 +26,7 @@ import edu.wpi.first.networktables.StructArrayEntry;
 import edu.wpi.first.networktables.StructEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Turret.Turret;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -47,6 +49,12 @@ public class Robot extends LoggedRobot {
   final StructArrayEntry<SwerveModuleState> states;
 
   final StructArrayEntry<SwerveModuleState> real;
+
+  final DoubleEntry turretAngle;
+
+  final DoubleEntry turretDesiredAngle;
+
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -82,6 +90,16 @@ public class Robot extends LoggedRobot {
       PubSubOption.keepDuplicates(true)
     );
 
+    turretDesiredAngle = inst.getDoubleTopic("/blud/turretDesiredAngle").getEntry(
+      robotContainer.turret.desiredRotation.getDegrees(),
+      PubSubOption.keepDuplicates(true)
+    );
+
+    turretAngle = inst.getDoubleTopic("/blud/turretAngle").getEntry(
+      robotContainer.turret.inputs.currentRotation.getDegrees(),
+      PubSubOption.keepDuplicates(true)
+    );
+
     robotState = RobotState.getInstance();
 
   }
@@ -106,6 +124,14 @@ public class Robot extends LoggedRobot {
 
     poseEntry.set(
       RobotState.getInstance().getPose()
+    );
+
+    turretDesiredAngle.set(
+      robotContainer.turret.desiredRotation.getDegrees()
+    );
+
+    turretAngle.set(
+      robotContainer.turret.inputs.currentRotation.getDegrees()
     );
 
     states.set(
