@@ -36,7 +36,7 @@ public class TurretIOSim implements TurretIO {
     @Override
     public Rotation2d getRotation()
     {
-        return new Rotation2d(motor.getAngularPosition());
+        return new Rotation2d(motor.getAngularPositionRad());
     }
 
     @Override
