@@ -56,7 +56,6 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public Rotation2d getTurnDegrees()
     {
-        //System.out.println("getturn " + moduleSim.getSteerAbsoluteAngle());
         return new Rotation2d(turnMotor.getPosition().getValueAsDouble());
     }
 
