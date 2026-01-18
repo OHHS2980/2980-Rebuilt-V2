@@ -17,7 +17,7 @@ public class Turret extends SubsystemBase {
 
     public Rotation2d desiredRotation = new Rotation2d();
 
-    public TurretIOInputs inputs = new TurretIOInputs();
+    public TurretIOInputs inputs;
 
     public Turret
     (
@@ -32,6 +32,7 @@ public class Turret extends SubsystemBase {
 
         turretPID = new PIDController(kP, kI, kD);
         
+        inputs = new TurretIOInputs();
     }
 
     public void moveToRotation(Rotation2d rotation)
@@ -76,6 +77,8 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic()
     {
+                System.out.println("netanyahu");
+
         turretIO.updateInputs(inputs);
 
         update();

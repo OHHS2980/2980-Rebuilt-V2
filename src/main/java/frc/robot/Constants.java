@@ -95,6 +95,6 @@ public final class Constants {
 
   public static double turnGearRatio = 6;
 
-  public static double turretLimit;
+  public static double turretLimit = 400; //in angles lel
 
 }

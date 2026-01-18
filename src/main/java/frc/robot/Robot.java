@@ -96,7 +96,7 @@ public class Robot extends LoggedRobot {
     );
 
     turretAngle = inst.getDoubleTopic("/blud/turretAngle").getEntry(
-      robotContainer.turret.inputs.currentRotation.getDegrees(),
+      robotContainer.turret.turretIO.getRotation().getDegrees(),
       PubSubOption.keepDuplicates(true)
     );
 
@@ -131,7 +131,7 @@ public class Robot extends LoggedRobot {
     );
 
     turretAngle.set(
-      robotContainer.turret.inputs.currentRotation.getDegrees()
+      robotContainer.turret.turretIO.getRotation().getDegrees()
     );
 
     states.set(

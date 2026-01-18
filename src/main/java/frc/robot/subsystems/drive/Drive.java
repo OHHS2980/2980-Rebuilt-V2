@@ -118,7 +118,6 @@ public class Drive extends SubsystemBase {
             }
         );
 
-        System.out.print("odom" + odometry.getPoseMeters());
         return odometry.getPoseMeters();
     }
 
@@ -126,7 +125,6 @@ public class Drive extends SubsystemBase {
     {
         //moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
-        System.out.print("chassis" + chassisSpeeds);
         for (int module = 0; module <= 3; module++)
         {
             modules[module].runToState
@@ -213,7 +211,6 @@ public class Drive extends SubsystemBase {
         (
             () ->
             {
-                System.out.println("yo" + x.getAsDouble() + y.getAsDouble());
                 drive.chassisSpeeds = new ChassisSpeeds(
                     x.getAsDouble(),
                     y.getAsDouble(),

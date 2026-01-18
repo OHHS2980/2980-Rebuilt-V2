@@ -62,14 +62,12 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public void setDriveVoltage(double output) 
     {
-        System.out.println("drive output" + output);
         driveMotor.requestVoltage(Volts.of(output));
     }
 
     @Override
     public void setTurnVoltage(double output) 
     {
-        System.out.println("turn output" + output);
         turnMotor.requestVoltage(Volts.of(output));
     }
 
@@ -84,14 +82,12 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public Rotation2d getTurnDegrees()
     {
-        System.out.println("getturn " + moduleSim.getSteerAbsoluteAngle());
         return moduleSim.getSteerAbsoluteFacing();
     }
 
     @Override
     public Distance getDriveDistance()
     {
-        System.out.println("getdist " + moduleSim.getDriveEncoderUnGearedPosition().in(Radian));
 
         return Distance.ofBaseUnits
         (
@@ -106,7 +102,6 @@ public class ModuleIOSim implements ModuleIO {
     @Override
     public SwerveModuleState getModuleState()
     {
-        System.out.print(moduleSim.getCurrentState());
         return moduleSim.getCurrentState();
     }
 
