@@ -20,8 +20,9 @@ public class ModuleIOReal implements ModuleIO {
 
     public int moduleNumber;
 
-    public ModuleIOReal(int moduleNumber)
+    public ModuleIOReal(double canID, int moduleNumber)
     {
+
         this.moduleNumber = moduleNumber;
     }
 
@@ -34,14 +35,12 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public void setDriveVoltage(double output) 
     {
-        System.out.println("drive output" + output);
         driveMotor.set(output);
     }
 
     @Override
     public void setTurnVoltage(double output) 
     {
-        System.out.println("turn output" + output);
         turnMotor.set(output);
     }
 

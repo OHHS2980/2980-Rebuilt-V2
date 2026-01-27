@@ -26,7 +26,7 @@ import edu.wpi.first.networktables.StructArrayEntry;
 import edu.wpi.first.networktables.StructEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Turret.Turret;
+import frc.robot.subsystems.shooter.Turret.Turret;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -49,6 +49,9 @@ public class Robot extends LoggedRobot {
   final StructArrayEntry<SwerveModuleState> states;
 
   final StructArrayEntry<SwerveModuleState> real;
+  
+
+  final StructEntry<Pose2d> turretEntry;
 
   final DoubleEntry turretAngle;
 
@@ -64,7 +67,9 @@ public class Robot extends LoggedRobot {
 
     robotContainer = new RobotContainer();
 
+
     Logger.start();
+
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
 
@@ -90,13 +95,19 @@ public class Robot extends LoggedRobot {
       PubSubOption.keepDuplicates(true)
     );
 
+    turretEntry = inst.getStructTopic("/blud/turretPose", Pose2d.struct).getEntry(
+      robotContainer.shooter.turret.turretPose,
+      PubSubOption.keepDuplicates(true)
+    );
+
+
     turretDesiredAngle = inst.getDoubleTopic("/blud/turretDesiredAngle").getEntry(
-      robotContainer.turret.desiredRotation.getDegrees(),
+      robotContainer.shooter.turret.desiredRotation.getDegrees(),
       PubSubOption.keepDuplicates(true)
     );
 
     turretAngle = inst.getDoubleTopic("/blud/turretAngle").getEntry(
-      robotContainer.turret.turretIO.getRotation().getDegrees(),
+      robotContainer.shooter.turret.inputs.currentRotation.getDegrees(),
       PubSubOption.keepDuplicates(true)
     );
 
@@ -122,16 +133,10 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
+
+
     poseEntry.set(
       RobotState.getInstance().getPose()
-    );
-
-    turretDesiredAngle.set(
-      robotContainer.turret.desiredRotation.getDegrees()
-    );
-
-    turretAngle.set(
-      robotContainer.turret.turretIO.getRotation().getDegrees()
     );
 
     states.set(
@@ -145,6 +150,20 @@ public class Robot extends LoggedRobot {
     chassisEntry.set(
       robotContainer.drive.chassisSpeeds
     );
+
+    turretEntry.set(
+      robotContainer.shooter.turret.turretPose
+    );
+
+    turretDesiredAngle.set(
+      robotContainer.shooter.turret.desiredRotation.getDegrees()
+    );
+
+    turretAngle.set(
+      robotContainer.shooter.turret.inputs.currentRotation.getDegrees()
+    );
+
+
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

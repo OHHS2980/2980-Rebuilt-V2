@@ -4,12 +4,19 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.Turret.Turret;
-import frc.robot.subsystems.Turret.TurretIO;
-import frc.robot.subsystems.Turret.TurretIOSim;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.GyroIOReal;
 import frc.robot.subsystems.drive.GyroIOSim;
+import frc.robot.subsystems.drive.module.ModuleIOReal;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Hood.HoodIOSim;
+import frc.robot.subsystems.shooter.Turret.Turret;
+import frc.robot.subsystems.shooter.Turret.TurretIO;
+import frc.robot.subsystems.shooter.Turret.TurretIOMotor;
+import frc.robot.subsystems.shooter.Turret.TurretIOSim;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.Constants.Mode;
 
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
@@ -42,7 +49,9 @@ public class RobotContainer {
 
   Drive drive;
 
-  Turret turret;
+  Shooter shooter;
+
+  Vision vision;
 
   SwerveDriveSimulation driveSim;
   final DriveTrainSimulationConfig driveSimConfig = DriveTrainSimulationConfig.Default()
@@ -69,29 +78,63 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
+
+    if (Constants.mode == Mode.REAL)
+    {
+
+
+      this.drive = new Drive(
+        new ModuleIOReal(Constants.flDriveID,0),
+        new ModuleIOReal(Constants.frDriveID,1),
+        new ModuleIOReal(Constants.blDriveID,2),
+        new ModuleIOReal(Constants.brDriveID,3),
+        new GyroIOReal(),
+        Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
+        Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
+      );
+
+      this.shooter = new Shooter(
+        new TurretIOMotor(),
+        new HoodIOSim(),
+        Constants.SimConstants.turretP.get(), 
+        Constants.SimConstants.turretI.get(),
+        Constants.SimConstants.turretD.get(),
+        0,0,0
+      );
+    }
+    else
+    {
+      this.driveSim = new SwerveDriveSimulation(
+        driveSimConfig,
+        RobotState.getInstance().getPose()
+      ); 
+
+      this.drive = new Drive(
+        
+        new ModuleIOSim(driveSim.getModules()[0],0),
+        new ModuleIOSim(driveSim.getModules()[1],1),
+        new ModuleIOSim(driveSim.getModules()[2],2),
+        new ModuleIOSim(driveSim.getModules()[3],3),
+        new GyroIOSim(driveSim.getGyroSimulation()),
+        Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
+        Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
+      );
+
+      this.shooter = new Shooter(
+        new TurretIOSim(),
+        new HoodIOSim(),
+        Constants.SimConstants.turretP.get(), 
+        Constants.SimConstants.turretI.get(),
+        Constants.SimConstants.turretD.get(),
+        0,0,0
+      );
+    }
     controller = new XboxController(0);
 
-    this.driveSim = new SwerveDriveSimulation(
-      driveSimConfig,
-      RobotState.getInstance().getPose()
-    );
+    
 
-    this.drive = new Drive(
-      new ModuleIOSim(driveSim.getModules()[0],0),
-      new ModuleIOSim(driveSim.getModules()[1],1),
-      new ModuleIOSim(driveSim.getModules()[2],2),
-      new ModuleIOSim(driveSim.getModules()[3],3),
-      new GyroIOSim(driveSim.getGyroSimulation()),
-      Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
-      Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
-    );
 
-    this.turret = new Turret(
-      new TurretIOSim(),
-      Constants.SimConstants.turretP.get(), 
-      Constants.SimConstants.turretI.get(),
-      Constants.SimConstants.turretD.get()
-    );
+
 
     configureBindings();
     mapleSimSetup();
@@ -115,6 +158,13 @@ public class RobotContainer {
         () -> controller.getLeftX(),
         () -> controller.getLeftY(),
         () -> controller.getRightX()
+      )
+    );
+
+    shooter.setDefaultCommand(
+      Shooter.autoAlignCommand
+      (
+        shooter
       )
     );
   }

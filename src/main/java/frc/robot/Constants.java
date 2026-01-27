@@ -6,11 +6,11 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 //import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Mass;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -20,6 +20,40 @@ import edu.wpi.first.units.measure.Mass;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static double flDriveID = 30;
+  public static double flTurnID = 10;
+  public static double flEncoderID = 10;
+
+
+  public static double frDriveID = 0;
+  public static double frTurnID = 0;
+  public static double frEncoderID = 10;
+
+
+  public static double blDriveID = 0;
+  public static double blTurnID = 0;
+  public static double blEncoderID = 10;
+
+
+  public static double brDriveID = 0;
+  public static double brTurnID = 0;
+  public static double brEncoderID = 10;
+
+
+  public static int turretID = 8;
+  public static int turretID2 = 10;
+
+
+  public enum Mode 
+  {
+    SIM,
+    REAL
+  }
+
+  public static Mode mode = Mode.SIM;
+
+
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -39,28 +73,25 @@ public final class Constants {
 
 
 
-    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.5);
+    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.05);
 
     public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
   
-    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 0);
+    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 1);
     
   }
 
   public static class FieldConstants {
 
-    public static Pose3d getHub()
+    public static Pose2d getHub()
     {
-      return new Pose3d(0,0,10, null);
+      return new Pose2d(4.0132,4.572, null);
     }
 
-
-
-    public static LoggedNetworkNumber turretP = new LoggedNetworkNumber("/Tuning/turretP", 0.5);
-
-    public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
-  
-    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 0);
+    public static double hubHeight()
+    {
+      return 1.828;
+    }
     
   }
 
@@ -68,10 +99,12 @@ public final class Constants {
   
   public static final double MAX_SPEED = 0;
 
-  public static Translation2d flLocation = new Translation2d(1.1,1.1);
-  public static Translation2d frLocation = new Translation2d(1.1,-1.1);
-  public static Translation2d blLocation = new Translation2d(-1.1,-1.1);
-  public static Translation2d brLocation = new Translation2d(-1.1,1.1);
+  public static Translation2d flLocation = new Translation2d(0.3556,0.3302);
+  public static Translation2d frLocation = new Translation2d(0.3556,-0.3302);
+  public static Translation2d blLocation = new Translation2d(-0.3556,-0.3302);
+  public static Translation2d brLocation = new Translation2d(-0.3556,0.3302);
+
+  public static Translation2d[] locations = new Translation2d[] {flLocation, frLocation, blLocation, brLocation};
 
   //CAN IDs
 
@@ -89,12 +122,18 @@ public final class Constants {
 
   public static double robotMass;
 
-  public static double swerveWheelRadius = 0.1;
+  public static double swerveWheelRadius = 0.0381;
 
   public static double driveGearRatio = 6;
 
   public static double turnGearRatio = 6;
 
-  public static double turretLimit = 400; //in angles lel
+  public static double turretLimit = 400;
+
+  public static String limelightName;
+
+  public static String camName;
+  
+  public static double TURRET_GEAR_RATIO = 100;
 
 }
