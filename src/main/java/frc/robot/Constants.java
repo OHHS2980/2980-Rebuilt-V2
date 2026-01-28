@@ -21,24 +21,24 @@ import edu.wpi.first.units.measure.Mass;
  */
 public final class Constants {
 
-  public static double flDriveID = 30;
-  public static double flTurnID = 10;
-  public static double flEncoderID = 10;
+  public static int flDriveID = 30;
+  public static int flTurnID = 10;
+  public static int flEncoderID = 10;
 
 
-  public static double frDriveID = 0;
-  public static double frTurnID = 0;
-  public static double frEncoderID = 10;
+  public static int frDriveID = 0;
+  public static int frTurnID = 0;
+  public static int frEncoderID = 10;
 
 
-  public static double blDriveID = 0;
-  public static double blTurnID = 0;
-  public static double blEncoderID = 10;
+  public static int blDriveID = 0;
+  public static int blTurnID = 0;
+  public static int blEncoderID = 10;
 
 
-  public static double brDriveID = 0;
-  public static double brTurnID = 0;
-  public static double brEncoderID = 10;
+  public static int brDriveID = 0;
+  public static int brTurnID = 0;
+  public static int brEncoderID = 10;
 
 
   public static int turretID = 8;

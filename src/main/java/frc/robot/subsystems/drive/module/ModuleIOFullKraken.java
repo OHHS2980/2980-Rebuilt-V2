@@ -2,14 +2,7 @@ package frc.robot.subsystems.drive.module;
 
 import static edu.wpi.first.units.Units.Meter;
 
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-
-
-import com.revrobotics.spark.config.*;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,11 +10,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants;
 
-public class ModuleIOReal implements ModuleIO {
+public class ModuleIOFullKraken implements ModuleIO {
     
-    public SparkMax turnMotor; 
-
-    public CANcoder encoder; 
+    public TalonFX turnMotor; 
 
     public TalonFX driveMotor; 
 
@@ -29,14 +20,10 @@ public class ModuleIOReal implements ModuleIO {
 
     public int moduleNumber;
 
-    public ModuleIOReal(int driveID, int encoderID, int turnID, int moduleNumber)
+    public ModuleIOFullKraken(double canID, int moduleNumber)
     {
 
         this.moduleNumber = moduleNumber;
-
-        driveMotor = new TalonFX(driveID);
-        turnMotor = new SparkMax(turnID, MotorType.kBrushless);
-        encoder = new CANcoder(encoderID);
     }
 
     @Override
@@ -68,7 +55,7 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public Rotation2d getTurnDegrees()
     {
-        return new Rotation2d(encoder.getPosition().getValueAsDouble());
+        return new Rotation2d(turnMotor.getPosition().getValueAsDouble());
     }
 
     @Override

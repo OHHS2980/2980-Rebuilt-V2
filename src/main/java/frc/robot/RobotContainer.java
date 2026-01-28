@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOReal;
 import frc.robot.subsystems.drive.GyroIOSim;
+import frc.robot.subsystems.drive.module.ModuleIOFullKraken;
 import frc.robot.subsystems.drive.module.ModuleIOReal;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
 import frc.robot.subsystems.shooter.Shooter;
@@ -84,10 +85,10 @@ public class RobotContainer {
 
 
       this.drive = new Drive(
-        new ModuleIOReal(Constants.flDriveID,0),
-        new ModuleIOReal(Constants.frDriveID,1),
-        new ModuleIOReal(Constants.blDriveID,2),
-        new ModuleIOReal(Constants.brDriveID,3),
+        new ModuleIOReal(Constants.flDriveID, Constants.flEncoderID, Constants.flTurnID, 0),
+        new ModuleIOReal(Constants.frDriveID, Constants.frEncoderID, Constants.frTurnID, 1),
+        new ModuleIOReal(Constants.blDriveID, Constants.blEncoderID, Constants.blTurnID, 2),
+        new ModuleIOReal(Constants.brDriveID, Constants.brEncoderID, Constants.brTurnID, 3),
         new GyroIOReal(),
         Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
         Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
