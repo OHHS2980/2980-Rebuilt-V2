@@ -21,24 +21,24 @@ import edu.wpi.first.units.measure.Mass;
  */
 public final class Constants {
 
-  public static int flDriveID = 30;
+  public static int flDriveID = 20;
   public static int flTurnID = 10;
-  public static int flEncoderID = 10;
+  public static int flEncoderID = 21;
 
 
-  public static int frDriveID = 0;
-  public static int frTurnID = 0;
-  public static int frEncoderID = 10;
+  public static int frDriveID = 16;
+  public static int frTurnID = 14;
+  public static int frEncoderID = 23;
 
 
-  public static int blDriveID = 0;
-  public static int blTurnID = 0;
-  public static int blEncoderID = 10;
+  public static int blDriveID = 17;
+  public static int blTurnID = 12;
+  public static int blEncoderID = 22;
 
 
-  public static int brDriveID = 0;
-  public static int brTurnID = 0;
-  public static int brEncoderID = 10;
+  public static int brDriveID = 18;
+  public static int brTurnID = 16;
+  public static int brEncoderID = 24;
 
 
   public static int turretID = 8;
@@ -51,7 +51,7 @@ public final class Constants {
     REAL
   }
 
-  public static Mode mode = Mode.SIM;
+  public static Mode mode = Mode.REAL;
 
 
 

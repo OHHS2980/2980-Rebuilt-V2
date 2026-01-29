@@ -94,6 +94,10 @@ public class RobotContainer {
         Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
       );
 
+    }
+    else
+    {
+
       this.shooter = new Shooter(
         new TurretIOMotor(),
         new HoodIOSim(),
@@ -102,9 +106,7 @@ public class RobotContainer {
         Constants.SimConstants.turretD.get(),
         0,0,0
       );
-    }
-    else
-    {
+
       this.driveSim = new SwerveDriveSimulation(
         driveSimConfig,
         RobotState.getInstance().getPose()
@@ -129,6 +131,8 @@ public class RobotContainer {
         Constants.SimConstants.turretD.get(),
         0,0,0
       );
+
+      mapleSimSetup();
     }
     controller = new XboxController(0);
 
@@ -138,7 +142,6 @@ public class RobotContainer {
 
 
     configureBindings();
-    mapleSimSetup();
   }
 
   /**
