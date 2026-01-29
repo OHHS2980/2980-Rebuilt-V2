@@ -36,8 +36,6 @@ public class ModuleIOSim implements ModuleIO {
 
     private final SimulatedMotorController.GenericMotorController turnMotor;
 
-    public PIDController turnPID;
-
     public Rotation2d turnSetpoint;
 
     public int moduleNumber;

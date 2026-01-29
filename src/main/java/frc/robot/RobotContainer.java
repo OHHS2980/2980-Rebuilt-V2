@@ -79,6 +79,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
+    controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
+
 
     if (Constants.mode == Mode.REAL)
     {
@@ -134,7 +136,6 @@ public class RobotContainer {
 
       mapleSimSetup();
     }
-    controller = new XboxController(0);
 
     
 

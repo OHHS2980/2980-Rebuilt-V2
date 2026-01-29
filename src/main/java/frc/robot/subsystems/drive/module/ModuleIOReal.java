@@ -44,8 +44,8 @@ public class ModuleIOReal implements ModuleIO {
 
         var turnConfig = new SparkMaxConfig();
         turnConfig
-            .idleMode(IdleMode.kBrake)
-            .voltageCompensation(12.0);
+            .idleMode(IdleMode.kBrake);
+            //.voltageCompensation(12.0);
        
         turnConfig
             .closedLoop
@@ -67,21 +67,16 @@ public class ModuleIOReal implements ModuleIO {
         driveMotor.getConfigurator().apply(driveConfig);
 
         turnMotor = new SparkMax(turnID, MotorType.kBrushless);
+
+        //turnMotor.set(0.05);
         encoder = new CANcoder(encoderID);
     }
 
-    public void destroyRobot()
-    {
-        SparkMax[] bombs;
-        for (int i = 0; i < 99; i++)
-        {
-            
-        }
-    }
+
     @Override
     public void updateInputs(ModuleIOInputs inputs) 
     {
-        
+        inputs.turnPosition = getTurnDegrees();
     }
 
     @Override
