@@ -70,6 +70,14 @@ public class ModuleIOReal implements ModuleIO {
         encoder = new CANcoder(encoderID);
     }
 
+    public void destroyRobot()
+    {
+        SparkMax[] bombs;
+        for (int i = 0; i < 99; i++)
+        {
+            
+        }
+    }
     @Override
     public void updateInputs(ModuleIOInputs inputs) 
     {
