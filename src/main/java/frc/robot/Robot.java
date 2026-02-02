@@ -147,6 +147,7 @@ public class Robot extends LoggedRobot {
       robotContainer.drive.getModuleStates()
     );
 
+    System.out.println("eji");
     chassisEntry.set(
       robotContainer.drive.chassisSpeeds
     );

@@ -74,6 +74,11 @@ public class Module {
 
         moduleIO.updateInputs(inputs);
 
+        System.out.println("a" +moduleIO.getDriveVelocity());
+        System.out.println("a" +moduleIO.getDriveDistance());
+        System.out.println("a" +moduleIO.getModuleState());
+        System.out.println("a" +moduleIO.getTurnDegrees());
+
         configurePID();
     }
 

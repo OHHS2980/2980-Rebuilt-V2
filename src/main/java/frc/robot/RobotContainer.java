@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.XboxControllerSim;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -46,7 +47,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
 
-  XboxController controller;
+  CommandXboxController controller;
 
   Drive drive;
 
@@ -79,65 +80,80 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
-    controller = new XboxController(Constants.OperatorConstants.kDriverControllerPort);
+    controller = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);
 
 
-    if (Constants.mode == Mode.REAL)
+    switch (Constants.mode)
     {
-
-
-      this.drive = new Drive(
-        new ModuleIOReal(Constants.flDriveID, Constants.flEncoderID, Constants.flTurnID, 0),
-        new ModuleIOReal(Constants.frDriveID, Constants.frEncoderID, Constants.frTurnID, 1),
-        new ModuleIOReal(Constants.blDriveID, Constants.blEncoderID, Constants.blTurnID, 2),
-        new ModuleIOReal(Constants.brDriveID, Constants.brEncoderID, Constants.brTurnID, 3),
-        new GyroIOReal(),
-        Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
-        Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
-      );
-
-    }
-    else
-    {
-
-      this.shooter = new Shooter(
-        new TurretIOMotor(),
-        new HoodIOSim(),
-        Constants.SimConstants.turretP.get(), 
-        Constants.SimConstants.turretI.get(),
-        Constants.SimConstants.turretD.get(),
-        0,0,0
-      );
-
-      this.driveSim = new SwerveDriveSimulation(
-        driveSimConfig,
-        RobotState.getInstance().getPose()
-      ); 
-
-      this.drive = new Drive(
-        
-        new ModuleIOSim(driveSim.getModules()[0],0),
-        new ModuleIOSim(driveSim.getModules()[1],1),
-        new ModuleIOSim(driveSim.getModules()[2],2),
-        new ModuleIOSim(driveSim.getModules()[3],3),
-        new GyroIOSim(driveSim.getGyroSimulation()),
-        Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
-        Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
-      );
-
-      this.shooter = new Shooter(
-        new TurretIOSim(),
-        new HoodIOSim(),
-        Constants.SimConstants.turretP.get(), 
-        Constants.SimConstants.turretI.get(),
-        Constants.SimConstants.turretD.get(),
-        0,0,0
-      );
-
-      mapleSimSetup();
-    }
 
     
+      case REAL:
+
+      case SIM:
+
+        this.shooter = new Shooter(
+          new TurretIOMotor(),
+          new HoodIOSim(),
+          Constants.SimConstants.turretP.get(), 
+          Constants.SimConstants.turretI.get(),
+          Constants.SimConstants.turretD.get(),
+          0,0,0
+        );
+
+        this.driveSim = new SwerveDriveSimulation(
+          driveSimConfig,
+          RobotState.getInstance().getPose()
+        ); 
+
+        this.drive = new Drive(
+          
+          new ModuleIOSim(driveSim.getModules()[0],0),
+          new ModuleIOSim(driveSim.getModules()[1],1),
+          new ModuleIOSim(driveSim.getModules()[2],2),
+          new ModuleIOSim(driveSim.getModules()[3],3),
+          new GyroIOSim(driveSim.getGyroSimulation()),
+          Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
+          Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
+        );
+
+        this.shooter = new Shooter(
+          new TurretIOSim(),
+          new HoodIOSim(),
+          Constants.SimConstants.turretP.get(), 
+          Constants.SimConstants.turretI.get(),
+          Constants.SimConstants.turretD.get(),
+          0,0,0
+        );
+
+        mapleSimSetup();
+
+      case TEST_DRIVE:
+
+        this.drive = new Drive(
+          new ModuleIOReal(Constants.flDriveID, Constants.flEncoderID, Constants.flTurnID, 0),
+          new ModuleIOReal(Constants.frDriveID, Constants.frEncoderID, Constants.frTurnID, 1),
+          new ModuleIOReal(Constants.blDriveID, Constants.blEncoderID, Constants.blTurnID, 2),
+          new ModuleIOReal(Constants.brDriveID, Constants.brEncoderID, Constants.brTurnID, 3),
+          new GyroIOReal(),
+          Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
+          Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
+        );
+        break;
+
+      case TEST_TURRET:
+
+        this.shooter = new Shooter(
+          new TurretIOMotor(),
+          new HoodIOSim(),
+          Constants.SimConstants.turretP.get(), 
+          Constants.SimConstants.turretI.get(),
+          Constants.SimConstants.turretD.get(),
+          0,0,0
+        );
+        break;
+
+    }
+
 
 
 
@@ -172,6 +188,8 @@ public class RobotContainer {
         shooter
       )
     );
+    
+    controller.a().onTrue(Commands.runOnce(() -> Shooter.rotateToSetpoint(shooter), shooter));
   }
 
   /**

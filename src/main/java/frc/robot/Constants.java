@@ -43,17 +43,21 @@ public final class Constants {
 
   public static int turretID = 8;
   public static int turretID2 = 10;
+  public static int turretEncoderID = 6;
+  public static int turretEncoderID2 = 7;
+  
+
 
 
   public enum Mode 
   {
     SIM,
-    REAL
+    REAL,
+    TEST_DRIVE,
+    TEST_TURRET
   }
 
-  public static Mode mode = Mode.SIM;
-
-
+  public static Mode mode = Mode.REAL;
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

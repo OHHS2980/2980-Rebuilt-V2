@@ -75,6 +75,8 @@ public class Turret {
         turretPID.setSetpoint(adjustedAngle);
     }
 
+      
+
     // finds x and y from robot to hub
     // then calculates shortest distance
     // and angle
@@ -156,6 +158,10 @@ public class Turret {
         );
 
     }
+
+	public Rotation2d getRotation() {
+		return turretIO.getRotation();
+	}
 
         
 

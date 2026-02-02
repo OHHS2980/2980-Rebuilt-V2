@@ -30,8 +30,7 @@ public class TurretIOMotor implements TurretIO {
 
     public SparkMax motor2;
 
-    public AbsoluteEncoder encoder2;
-    
+    public AbsoluteEncoder encoder2;   
 
     public double lastTime = 0;
 
@@ -39,11 +38,9 @@ public class TurretIOMotor implements TurretIO {
     {
 
         SparkMaxConfig config = new SparkMaxConfig();
-
         config.inverted(true);
-        
+    
         motor = new SparkMax(Constants.turretID, MotorType.kBrushless);
-
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         motor2 = new SparkMax(Constants.turretID2, MotorType.kBrushless);
 

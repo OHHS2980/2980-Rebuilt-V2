@@ -18,16 +18,17 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.measure.Distance;
 import frc.robot.Constants;
 
 public class ModuleIOReal implements ModuleIO {
     
-    public SparkMax turnMotor; 
+    public final SparkMax turnMotor; 
 
-    public CANcoder encoder; 
+    public final CANcoder encoder; 
 
-    public TalonFX driveMotor; 
+    public final TalonFX driveMotor; 
 
     public PIDController turnPID;
 
@@ -48,10 +49,6 @@ public class ModuleIOReal implements ModuleIO {
             //.voltageCompensation(12.0);
        
         turnConfig
-            .closedLoop
-            .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
-            .positionWrappingEnabled(true);
-        turnConfig
             .signals
             .absoluteEncoderPositionAlwaysOn(true)
             //.absoluteEncoderPositionPeriodMs((int) (1000.0 / odometryFrequency))
@@ -68,7 +65,7 @@ public class ModuleIOReal implements ModuleIO {
 
         turnMotor = new SparkMax(turnID, MotorType.kBrushless);
 
-        //turnMotor.set(0.05);
+        //rnMotor.set(0.05);
         encoder = new CANcoder(encoderID);
     }
 
@@ -94,7 +91,8 @@ public class ModuleIOReal implements ModuleIO {
     @Override
     public double getDriveVelocity()
     {
-        return driveMotor.getVelocity().getValueAsDouble() * Constants.swerveWheelRadius;
+        return driveMotor.getRotorVelocity().getValueAsDouble() * Constants.swerveWheelRadius;
+
     }
 
 
@@ -112,5 +110,11 @@ public class ModuleIOReal implements ModuleIO {
         Distance.ofBaseUnits(driveMotor.getPosition().getValueAsDouble(), Meter);
     }
 
+
+    @Override
+    public SwerveModuleState getModuleState()
+    {
+        return new SwerveModuleState(getDriveVelocity(), getTurnDegrees());
+    }
 
 }
