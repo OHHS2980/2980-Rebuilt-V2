@@ -57,7 +57,7 @@ public final class Constants {
     TEST_TURRET
   }
 
-  public static Mode mode = Mode.REAL;
+  public static Mode mode = Mode.SIM;
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;

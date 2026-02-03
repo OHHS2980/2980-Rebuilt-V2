@@ -42,71 +42,71 @@ public class Robot extends LoggedRobot {
 
   final NetworkTable table;
 
-  final StructEntry<Pose2d> poseEntry;
+   StructEntry<Pose2d> poseEntry;
 
-  final StructEntry<ChassisSpeeds> chassisEntry;
+   StructEntry<ChassisSpeeds> chassisEntry;
 
-  final StructArrayEntry<SwerveModuleState> states;
+   StructArrayEntry<SwerveModuleState> states;
 
-  final StructArrayEntry<SwerveModuleState> real;
+   StructArrayEntry<SwerveModuleState> real;
   
-
   final StructEntry<Pose2d> turretEntry;
 
   final DoubleEntry turretAngle;
 
   final DoubleEntry turretDesiredAngle;
 
-
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
+
   public Robot() {
 
     robotContainer = new RobotContainer();
 
-
     Logger.start();
 
-
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
-
     table = inst.getTable("blud");
 
-    poseEntry = inst.getStructTopic("/blud/estimatedPose", Pose2d.struct).getEntry(
+    if (!(Constants.mode == Constants.Mode.TEST_TURRET))
+    {
+    states = inst.getStructArrayTopic("/Tuning/states", SwerveModuleState.struct).getEntry(
+      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds),
+      PubSubOption.keepDuplicates(true)
+    );
+    poseEntry = inst.getStructTopic("/Tuning/estimatedPose", Pose2d.struct).getEntry(
       RobotState.getInstance().getPose(), 
       PubSubOption.keepDuplicates(true)
     );
 
-    chassisEntry = inst.getStructTopic("/blud/chassisSpeeds", ChassisSpeeds.struct).getEntry(
+    chassisEntry = inst.getStructTopic("/Tuning/chassisSpeeds", ChassisSpeeds.struct).getEntry(
       robotContainer.drive.chassisSpeeds,
       PubSubOption.keepDuplicates(true)
     );
 
-    real = inst.getStructArrayTopic("/blud/real", SwerveModuleState.struct).getEntry(
+    real = inst.getStructArrayTopic("/Tuning/real", SwerveModuleState.struct).getEntry(
       robotContainer.drive.getModuleStates(),
       PubSubOption.keepDuplicates(true)
     );
+    }
 
-    states = inst.getStructArrayTopic("/blud/states", SwerveModuleState.struct).getEntry(
-      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds),
-      PubSubOption.keepDuplicates(true)
-    );
 
-    turretEntry = inst.getStructTopic("/blud/turretPose", Pose2d.struct).getEntry(
+  
+
+    turretEntry = inst.getStructTopic("/Tuning/turretPose", Pose2d.struct).getEntry(
       robotContainer.shooter.turret.turretPose,
       PubSubOption.keepDuplicates(true)
     );
 
 
-    turretDesiredAngle = inst.getDoubleTopic("/blud/turretDesiredAngle").getEntry(
+    turretDesiredAngle = inst.getDoubleTopic("/Tuning/turretDesiredAngle").getEntry(
       robotContainer.shooter.turret.desiredRotation.getDegrees(),
       PubSubOption.keepDuplicates(true)
     );
 
-    turretAngle = inst.getDoubleTopic("/blud/turretAngle").getEntry(
+    turretAngle = inst.getDoubleTopic("/Tuning/turretAngle").getEntry(
       robotContainer.shooter.turret.inputs.currentRotation.getDegrees(),
       PubSubOption.keepDuplicates(true)
     );
@@ -125,16 +125,8 @@ public class Robot extends LoggedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-
-
-
+  public void updateRobots()
+  {
     poseEntry.set(
       RobotState.getInstance().getPose()
     );
@@ -151,6 +143,18 @@ public class Robot extends LoggedRobot {
     chassisEntry.set(
       robotContainer.drive.chassisSpeeds
     );
+  }
+  @Override
+  public void robotPeriodic() {
+    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
+    // commands, running already-scheduled commands, removing finished or interrupted commands,
+    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // block in order for anything in the Command-based framework to work.
+    CommandScheduler.getInstance().run();
+
+
+
+    updateRobots();
 
     turretEntry.set(
       robotContainer.shooter.turret.turretPose
@@ -163,6 +167,9 @@ public class Robot extends LoggedRobot {
     turretAngle.set(
       robotContainer.shooter.turret.inputs.currentRotation.getDegrees()
     );
+
+    Logger.recordOutput("pluh/getdegrre", robotContainer.shooter.turret.inputs.currentRotation.getDegrees());
+    Logger.recordOutput("pluh/getdesired", robotContainer.shooter.turret.desiredRotation.getDegrees());
 
 
   }

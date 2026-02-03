@@ -44,10 +44,6 @@ public class TurretIOMotor implements TurretIO {
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         motor2 = new SparkMax(Constants.turretID2, MotorType.kBrushless);
 
-
-
-
-
         encoder = motor.getAbsoluteEncoder();
 
         //motor.setInputVoltage(1);

@@ -152,6 +152,8 @@ public class RobotContainer {
         );
         break;
 
+      default:
+        break;
     }
 
 
@@ -172,24 +174,24 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    drive.setDefaultCommand(
-      Drive.driveRobotCentric
-      (
-        drive, 
-        () -> controller.getLeftX(),
-        () -> controller.getLeftY(),
-        () -> controller.getRightX()
-      )
-    );
+    //drive.setDefaultCommand(
+      //Drive.driveRobotCentric
+      //(
+        //drive, 
+      //  () -> controller.getLeftX(),
+    //    () -> controller.getLeftY(),
+    //    () -> controller.getRightX()
+    //  )
+    ///);
 
-    shooter.setDefaultCommand(
-      Shooter.autoAlignCommand
-      (
-        shooter
-      )
-    );
+    //shooter.setDefaultCommand(
+    //  Shooter.autoAlignCommand
+    //  (
+    //    shooter
+    //  )
+    //);
     
-    controller.a().onTrue(Commands.runOnce(() -> Shooter.rotateToSetpoint(shooter), shooter));
+    controller.a().onTrue(Shooter.rotateToSetpoint(shooter));
   }
 
   /**

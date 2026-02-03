@@ -60,17 +60,16 @@ public class Shooter extends SubsystemBase {
             , shooter);
     }
 
-        public static Command rotateToSetpoint(Shooter shooter)
+    public static Command rotateToSetpoint(Shooter shooter)
     {
-        return Commands.run(
+        return Commands.runOnce(
             () ->
             {
                 shooter.turret.setDesiredRotation(
                     shooter.turret.getRotation().plus(new Rotation2d(Math.PI / 2))
                 );
             }
-    
-            , shooter);
+        , shooter);
     }
 
     public static Command autoAlignCommand(Shooter shooter)

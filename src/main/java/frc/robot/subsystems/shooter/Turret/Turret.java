@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.Turret;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -146,10 +147,7 @@ public class Turret {
         }
 
 
-        turretIO.setPower
-        (
-            output
-        );
+        turretIO.setPower(output);
 
 
         turretPose = new Pose2d(
