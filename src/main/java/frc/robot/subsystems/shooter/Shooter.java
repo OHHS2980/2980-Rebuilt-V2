@@ -2,8 +2,11 @@ package frc.robot.subsystems.shooter;
 
 import java.util.function.DoubleSupplier;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -51,25 +54,32 @@ public class Shooter extends SubsystemBase {
 
     public static Command joystickCommand(Shooter shooter, DoubleSupplier rotation)
     {
+        
         return Commands.run(
             () ->
             {
-                shooter.turret.turretIO.setPower(rotation.getAsDouble());
+                double power = rotation.getAsDouble();
+                if (power > 0)
+                {
+                    shooter.turret.turretIO.setPower(rotation.getAsDouble());
+                }
             }
     
             , shooter);
     }
 
+    
     public static Command rotateToSetpoint(Shooter shooter)
     {
         return Commands.runOnce(
             () ->
             {
                 shooter.turret.setDesiredRotation(
-                    shooter.turret.getRotation().plus(new Rotation2d(Math.PI / 2))
+                    //(shooter.turret.getRotation().getDegrees() + 90) % 360
+                    new Rotation2d(shooter.turret.getDesiredRotation().getRadians() + (Math.PI / 2))
                 );
             }
-        , shooter);
+        , shooter);//.until(() -> Math.abs(shooter.turret.getRotation().getDegrees() - shooter.turret.getDesiredRotation().getDegrees()) < 1.5);
     }
 
     public static Command autoAlignCommand(Shooter shooter)

@@ -23,7 +23,7 @@ public class RobotState
     private static RobotState instance;
 
 
-    @AutoLogOutput(key = "poo/estimatedPose")
+    @AutoLogOutput
     public Pose2d estimatedPose = new Pose2d();
 
     public Rotation2d getRotation()

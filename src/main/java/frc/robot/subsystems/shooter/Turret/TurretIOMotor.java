@@ -4,6 +4,7 @@ import org.ironmaple.simulation.motorsims.MapleMotorSim;
 import org.ironmaple.simulation.motorsims.SimMotorConfigs;
 
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.sim.SparkAbsoluteEncoderSim;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkMax;
@@ -30,8 +31,6 @@ public class TurretIOMotor implements TurretIO {
 
     public SparkMax motor2;
 
-    public AbsoluteEncoder encoder2;   
-
     public double lastTime = 0;
 
     public TurretIOMotor()
@@ -45,17 +44,13 @@ public class TurretIOMotor implements TurretIO {
         motor2 = new SparkMax(Constants.turretID2, MotorType.kBrushless);
 
         encoder = motor.getAbsoluteEncoder();
-
-        //motor.setInputVoltage(1);
             
     }
 
     @Override
     public Rotation2d getRotation()
     {
-
-        return new Rotation2d(encoder.getPosition() / Constants.TURRET_GEAR_RATIO);
-
+        return new Rotation2d(encoder.getPosition() * Math.PI * 2);
     }
 
     @Override

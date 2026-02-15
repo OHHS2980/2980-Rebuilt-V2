@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import org.ironmaple.simulation.drivesims.GyroSimulation;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,6 +26,7 @@ import frc.robot.subsystems.drive.module.ModuleIO;
 
 public class Drive extends SubsystemBase {
 
+    @AutoLogOutput
     public ChassisSpeeds chassisSpeeds;
 
     public SwerveDriveKinematics kinematics;
@@ -48,7 +50,7 @@ public class Drive extends SubsystemBase {
     public SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
 
 
-
+    @AutoLogOutput
     public Pose2d pose = new Pose2d();
 
     public Drive(

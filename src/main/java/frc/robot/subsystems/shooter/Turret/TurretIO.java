@@ -1,5 +1,8 @@
 package frc.robot.subsystems.shooter.Turret;
 
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -7,7 +10,7 @@ public interface TurretIO {
 
     public static class TurretIOInputs
     {
-        public Rotation2d currentRotation = new Rotation2d(1);
+        public Rotation2d currentRotation = new Rotation2d(0);
     }
 
     public default Rotation2d getRotation()

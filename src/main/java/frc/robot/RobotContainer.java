@@ -85,20 +85,11 @@ public class RobotContainer {
 
     switch (Constants.mode)
     {
-
-    
       case REAL:
 
-      case SIM:
+        break;
 
-        this.shooter = new Shooter(
-          new TurretIOMotor(),
-          new HoodIOSim(),
-          Constants.SimConstants.turretP.get(), 
-          Constants.SimConstants.turretI.get(),
-          Constants.SimConstants.turretD.get(),
-          0,0,0
-        );
+      case SIM:
 
         this.driveSim = new SwerveDriveSimulation(
           driveSimConfig,
@@ -127,13 +118,15 @@ public class RobotContainer {
 
         mapleSimSetup();
 
+        break;
+
       case TEST_DRIVE:
 
         this.drive = new Drive(
-          new ModuleIOReal(Constants.flDriveID, Constants.flEncoderID, Constants.flTurnID, 0),
-          new ModuleIOReal(Constants.frDriveID, Constants.frEncoderID, Constants.frTurnID, 1),
-          new ModuleIOReal(Constants.blDriveID, Constants.blEncoderID, Constants.blTurnID, 2),
-          new ModuleIOReal(Constants.brDriveID, Constants.brEncoderID, Constants.brTurnID, 3),
+          new ModuleIOFullKraken(Constants.flDriveID, Constants.flTurnID, Constants.flTurnEncoderID, Constants.flDriveEncoderID,0),
+          new ModuleIOFullKraken(Constants.frDriveID, Constants.frTurnID, Constants.frTurnEncoderID, Constants.frDriveEncoderID,1),
+          new ModuleIOFullKraken(Constants.blDriveID, Constants.blTurnID, Constants.blTurnEncoderID, Constants.blDriveEncoderID,2),
+          new ModuleIOFullKraken(Constants.brDriveID, Constants.brTurnID, Constants.brTurnEncoderID, Constants.brDriveEncoderID,3),
           new GyroIOReal(),
           Constants.SimConstants.turnP.get(), Constants.SimConstants.turnI.get(), Constants.SimConstants.turnD.get(),
           Constants.SimConstants.driveP.get(), Constants.SimConstants.driveD.get()
@@ -174,24 +167,28 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    //drive.setDefaultCommand(
-      //Drive.driveRobotCentric
-      //(
-        //drive, 
-      //  () -> controller.getLeftX(),
-    //    () -> controller.getLeftY(),
-    //    () -> controller.getRightX()
-    //  )
-    ///);
+    drive.setDefaultCommand(
+      Drive.driveRobotCentric
+      (
+        drive, 
+        () -> controller.getLeftX(),
+        () -> controller.getLeftY(),
+        () -> controller.getRightX()
+      )
+    );
+
+    shooter.setDefaultCommand(
+      Shooter.autoAlignCommand
+      (
+        shooter
+      )
+    );
 
     //shooter.setDefaultCommand(
-    //  Shooter.autoAlignCommand
-    //  (
-    //    shooter
-    //  )
+    //  shooter.joystickCommand(shooter, () -> controller.getLeftX())
     //);
     
-    controller.a().onTrue(Shooter.rotateToSetpoint(shooter));
+    //controller.a().onTrue(Shooter.rotateToSetpoint(shooter));
   }
 
   /**

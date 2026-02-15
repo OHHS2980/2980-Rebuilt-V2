@@ -5,11 +5,14 @@
 package frc.robot;
 
 
+
 import java.util.concurrent.Flow.Publisher;
 
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -26,7 +29,6 @@ import edu.wpi.first.networktables.StructArrayEntry;
 import edu.wpi.first.networktables.StructEntry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.shooter.Turret.Turret;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -34,27 +36,12 @@ import frc.robot.subsystems.shooter.Turret.Turret;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends LoggedRobot {
-  private Command m_autonomousCommand;
+  //private Command m_autonomousCommand;
 
   public RobotContainer robotContainer;
 
   RobotState robotState;
 
-  final NetworkTable table;
-
-   StructEntry<Pose2d> poseEntry;
-
-   StructEntry<ChassisSpeeds> chassisEntry;
-
-   StructArrayEntry<SwerveModuleState> states;
-
-   StructArrayEntry<SwerveModuleState> real;
-  
-  final StructEntry<Pose2d> turretEntry;
-
-  final DoubleEntry turretAngle;
-
-  final DoubleEntry turretDesiredAngle;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -63,53 +50,13 @@ public class Robot extends LoggedRobot {
 
   public Robot() {
 
-    robotContainer = new RobotContainer();
+    Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
 
     Logger.start();
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    table = inst.getTable("blud");
+    robotContainer = new RobotContainer();
 
-    if (!(Constants.mode == Constants.Mode.TEST_TURRET))
-    {
-    states = inst.getStructArrayTopic("/Tuning/states", SwerveModuleState.struct).getEntry(
-      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds),
-      PubSubOption.keepDuplicates(true)
-    );
-    poseEntry = inst.getStructTopic("/Tuning/estimatedPose", Pose2d.struct).getEntry(
-      RobotState.getInstance().getPose(), 
-      PubSubOption.keepDuplicates(true)
-    );
-
-    chassisEntry = inst.getStructTopic("/Tuning/chassisSpeeds", ChassisSpeeds.struct).getEntry(
-      robotContainer.drive.chassisSpeeds,
-      PubSubOption.keepDuplicates(true)
-    );
-
-    real = inst.getStructArrayTopic("/Tuning/real", SwerveModuleState.struct).getEntry(
-      robotContainer.drive.getModuleStates(),
-      PubSubOption.keepDuplicates(true)
-    );
-    }
-
-
-  
-
-    turretEntry = inst.getStructTopic("/Tuning/turretPose", Pose2d.struct).getEntry(
-      robotContainer.shooter.turret.turretPose,
-      PubSubOption.keepDuplicates(true)
-    );
-
-
-    turretDesiredAngle = inst.getDoubleTopic("/Tuning/turretDesiredAngle").getEntry(
-      robotContainer.shooter.turret.desiredRotation.getDegrees(),
-      PubSubOption.keepDuplicates(true)
-    );
-
-    turretAngle = inst.getDoubleTopic("/Tuning/turretAngle").getEntry(
-      robotContainer.shooter.turret.inputs.currentRotation.getDegrees(),
-      PubSubOption.keepDuplicates(true)
-    );
+    Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
 
     robotState = RobotState.getInstance();
 
@@ -125,25 +72,7 @@ public class Robot extends LoggedRobot {
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
-  public void updateRobots()
-  {
-    poseEntry.set(
-      RobotState.getInstance().getPose()
-    );
-
-    states.set(
-      robotContainer.drive.kinematics.toSwerveModuleStates(robotContainer.drive.chassisSpeeds)
-    );
-
-    real.set(
-      robotContainer.drive.getModuleStates()
-    );
-
-    System.out.println("eji");
-    chassisEntry.set(
-      robotContainer.drive.chassisSpeeds
-    );
-  }
+  
   @Override
   public void robotPeriodic() {
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
@@ -152,25 +81,7 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-
-
-    updateRobots();
-
-    turretEntry.set(
-      robotContainer.shooter.turret.turretPose
-    );
-
-    turretDesiredAngle.set(
-      robotContainer.shooter.turret.desiredRotation.getDegrees()
-    );
-
-    turretAngle.set(
-      robotContainer.shooter.turret.inputs.currentRotation.getDegrees()
-    );
-
-    Logger.recordOutput("pluh/getdegrre", robotContainer.shooter.turret.inputs.currentRotation.getDegrees());
-    Logger.recordOutput("pluh/getdesired", robotContainer.shooter.turret.desiredRotation.getDegrees());
-
+    Logger.recordOutput("real rotation", robotContainer.shooter.turret.getRotation().getRadians());
 
   }
 
@@ -185,10 +96,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -201,9 +108,7 @@ public class Robot extends LoggedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+
   }
 
   /** This function is called periodically during operator control. */
@@ -231,8 +136,6 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {
-
-    
     SimulatedArena.getInstance().simulationPeriodic();
   }
 }
