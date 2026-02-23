@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter.Turret;
 import java.util.function.DoubleSupplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.AutoLogOutputManager;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -25,8 +26,6 @@ import frc.robot.subsystems.vision.*;
 
 public class Turret {
     
-
-    @AutoLogOutput(key = "poo/turretPose")
     public Pose2d turretPose;
 
     public PIDController turretPID;
@@ -35,7 +34,9 @@ public class Turret {
 
     public TurretIO turretIO;
 
+    @AutoLogOutput
     public Rotation2d desiredRotation = new Rotation2d();
+
 
     public TurretIOInputs inputs = new TurretIOInputs();
 
@@ -54,6 +55,9 @@ public class Turret {
         turretPID = new PIDController(kP, kI, kD, 0.02d);
 
         camera = vision;
+
+        //AutoLogOutputManager.addObject(this);
+
         
     }
 
@@ -73,7 +77,7 @@ public class Turret {
         desiredRotation = new Rotation2d(Math.toRadians(adjustedAngle));
 
         //sets PID goal to desired rotation
-        turretPID.setSetpoint(adjustedAngle);
+        turretPID.setSetpoint(Math.toRadians(adjustedAngle));
     }
 
       
@@ -130,7 +134,6 @@ public class Turret {
     {
         turretIO.updateInputs(inputs, timer);
 
-
         turretPID.setPID
         (
             Constants.SimConstants.turretP.get(), 
@@ -139,7 +142,7 @@ public class Turret {
         );
 
         
-        double output = turretPID.calculate(turretIO.getRotation().getDegrees());
+        double output = turretPID.calculate(turretIO.getRotation().getRadians());
 
         if (Double.isNaN(output))
         {
@@ -152,7 +155,7 @@ public class Turret {
 
         turretPose = new Pose2d(
             RobotState.getInstance().getPosition(),
-            inputs.currentRotation.plus(RobotState.getInstance().getRotation())
+            inputs.currentRotation//.plus(RobotState.getInstance().getRotation())
         );
 
     }
@@ -160,6 +163,10 @@ public class Turret {
 	public Rotation2d getRotation() {
 		return turretIO.getRotation();
 	}
+
+    public Rotation2d getDesiredRotation() {
+        return desiredRotation;
+    }
 
         
 

@@ -23,22 +23,26 @@ public final class Constants {
 
   public static int flDriveID = 20;
   public static int flTurnID = 10;
-  public static int flEncoderID = 21;
+  public static int flTurnEncoderID = 22;
+  public static int flDriveEncoderID = 22;
 
 
   public static int frDriveID = 16;
   public static int frTurnID = 14;
-  public static int frEncoderID = 23;
+  public static int frTurnEncoderID = 22;
+  public static int frDriveEncoderID = 22;
 
 
   public static int blDriveID = 17;
   public static int blTurnID = 12;
-  public static int blEncoderID = 22;
+  public static int blTurnEncoderID = 22;
+  public static int blDriveEncoderID = 22;
 
 
   public static int brDriveID = 18;
   public static int brTurnID = 16;
-  public static int brEncoderID = 24;
+  public static int brTurnEncoderID = 24;
+  public static int brDriveEncoderID = 24;
 
 
   public static int turretID = 8;
@@ -81,7 +85,7 @@ public final class Constants {
 
     public static LoggedNetworkNumber turretI = new LoggedNetworkNumber("/Tuning/turretI", 0);
   
-    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretD", 1);
+    public static LoggedNetworkNumber  turretD = new LoggedNetworkNumber ("/Tuning/turretDdd", 1);
     
   }
 
@@ -112,8 +116,6 @@ public final class Constants {
 
   //CAN IDs
 
-  public static final int armEncoderID = 0;
-
   public static int armCanID;
 
   public static double trackY;
@@ -138,6 +140,6 @@ public final class Constants {
 
   public static String camName;
   
-  public static double TURRET_GEAR_RATIO = 100;
+  public static double TURRET_GEAR_RATIO = 3.61 * 5.23;
 
 }
