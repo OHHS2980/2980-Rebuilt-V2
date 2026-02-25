@@ -107,6 +107,9 @@ public final class Constants {
   
   public static final double MAX_SPEED = 0;
 
+  public static final String CAN_BUS_1 = "null";
+  public static final String CAN_BUS_2 = "full";
+
   public static Translation2d flLocation = new Translation2d(0.3556,0.3302);
   public static Translation2d frLocation = new Translation2d(0.3556,-0.3302);
   public static Translation2d blLocation = new Translation2d(-0.3556,-0.3302);
