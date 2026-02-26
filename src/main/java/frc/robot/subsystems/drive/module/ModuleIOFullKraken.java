@@ -34,7 +34,7 @@ public class ModuleIOFullKraken implements ModuleIO {
         driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
-        driveMotor = new TalonFX(driveID);
+        driveMotor = new TalonFX(driveID, Constants.CAN_BUS_2);
         driveMotor.getConfigurator().apply(driveConfig);
 
         var turnConfig = new TalonFXConfiguration();
