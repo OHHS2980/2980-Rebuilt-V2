@@ -49,7 +49,10 @@ public final class Constants {
   public static int turretID2 = 10;
   public static int turretEncoderID = 6;
   public static int turretEncoderID2 = 7;
-  
+
+  public double x_t = 0;
+  public double y_t = 0;
+  public double g = -9.81;
 
 
 
