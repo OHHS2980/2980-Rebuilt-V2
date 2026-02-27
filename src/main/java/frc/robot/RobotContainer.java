@@ -12,7 +12,6 @@ import frc.robot.subsystems.drive.module.ModuleIOReal;
 import frc.robot.subsystems.drive.module.ModuleIOSim;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Hood.HoodIOSim;
-import frc.robot.subsystems.shooter.Turret.Turret;
 import frc.robot.subsystems.shooter.Turret.TurretIO;
 import frc.robot.subsystems.shooter.Turret.TurretIOMotor;
 import frc.robot.subsystems.shooter.Turret.TurretIOSim;
@@ -113,7 +112,8 @@ public class RobotContainer {
           Constants.SimConstants.turretP.get(), 
           Constants.SimConstants.turretI.get(),
           Constants.SimConstants.turretD.get(),
-          0,0,0
+          0,0,0,
+          null
         );
 
         mapleSimSetup();
@@ -141,7 +141,8 @@ public class RobotContainer {
           Constants.SimConstants.turretP.get(), 
           Constants.SimConstants.turretI.get(),
           Constants.SimConstants.turretD.get(),
-          0,0,0
+          0,0,0,
+          null
         );
         break;
 

@@ -81,7 +81,7 @@ public class Robot extends LoggedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    Logger.recordOutput("real rotation", robotContainer.shooter.turret.getRotation().getRadians());
+    Logger.recordOutput("real rotation", robotContainer.shooter.turretIO.getRotation().getRadians());
 
   }
 

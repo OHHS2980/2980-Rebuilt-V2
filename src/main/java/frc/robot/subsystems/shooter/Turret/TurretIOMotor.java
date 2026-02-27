@@ -19,22 +19,17 @@ public class TurretIOMotor implements TurretIO {
 
     public RelativeEncoder encoder;
 
-    //public SparkMax motor2;
-
     public double lastTime = 0;
 
     public TurretIOMotor()
     {
-
         SparkMaxConfig config = new SparkMaxConfig();
         config.inverted(true);
     
         motor = new SparkMax(Constants.turretID, MotorType.kBrushless);
         motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        //motor2 = new SparkMax(Constants.turretID2, MotorType.kBrushless);
 
         encoder = motor.getEncoder();
-            
     }
 
     @Override
@@ -52,4 +47,5 @@ public class TurretIOMotor implements TurretIO {
     {
         inputs.currentRotation = getRotation();
     }
+
 }
